@@ -45,6 +45,10 @@ def _rand_label() -> str:
 def benchmark(server: str, rounds: int = 8) -> dict:
     """Uncached = random label under a real domain (forces recursion; NXDOMAIN is fine).
     Cached = repeat of a popular name (what you hit day to day)."""
+    say(f"DNS {server}: probing reachability")
+    if _query(server, POPULAR[0], timeout=1.5) is None and _query(server, POPULAR[1], timeout=1.5) is None:
+        say(f"DNS {server}: no response (blocked by VPN/firewall?), skipping")
+        return {"server": server, "uncached_ms": None, "cached_ms": None, "timeouts": 2 * rounds, "unreachable": True}
     say(f"DNS {server}: {rounds} uncached lookups (random names) + {rounds} cached")
     uncached = [t for t in (_query(server, f"{_rand_label()}.{random.choice(POPULAR)}") for _ in range(rounds)) if t]
     _query(server, POPULAR[0])
