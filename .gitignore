@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+.venv/
+# Snapshots contain SSIDs/BSSIDs of nearby networks and your DNS/gateway: keep them private.
+results/
