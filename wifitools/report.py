@@ -132,6 +132,10 @@ def render(s: dict) -> str:
               f"- upload: {t['upload']['mbps']} Mbps | loaded {t['upload'].get('loaded_median_ms')} ms | "
               f"bloat +{t['upload'].get('bufferbloat_ms')} ms | RPM {t['upload'].get('rpm')}"]
 
+    if "docsis" in s:
+        from . import docsis
+        L += ["", docsis.render(s["docsis"])]
+
     L += ["", "## Ranked findings"]
     fs = findings(s)
     L += [f"{i}. [{imp}/10] {msg}" for i, (imp, msg) in enumerate(fs, 1)] or ["- nothing flagged"]

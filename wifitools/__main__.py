@@ -10,7 +10,7 @@ from __future__ import annotations
 import argparse
 import sys
 
-from . import bench, compare, report, scan, util
+from . import bench, compare, docsis, report, scan, util
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -21,6 +21,9 @@ def main(argv: list[str] | None = None) -> int:
     r.add_argument("--label", default="run")
     r.add_argument("--quick", action="store_true", help="10 pings, 5 s load tests")
     r.add_argument("--no-throughput", action="store_true")
+    r.add_argument("--docsis", metavar="FILE", help="include a pasted Hub signal/log file in the snapshot")
+    d = sub.add_parser("docsis", help="grade pasted cable-modem signal + log pages")
+    d.add_argument("file", help="text file with the pasted pages ('-' for stdin)")
     sub.add_parser("scan")
     rp = sub.add_parser("report")
     rp.add_argument("file", nargs="?")
@@ -32,8 +35,12 @@ def main(argv: list[str] | None = None) -> int:
 
     if a.cmd == "run":
         snap = bench.run_all(a.label, 10 if a.quick else 30, 5 if a.quick else 10, a.no_throughput)
+        if a.docsis:
+            snap["docsis"] = docsis.load(a.docsis)
         path = bench.save(snap)
         print("\n" + report.render(snap) + f"\n\nSaved: {path}")
+    elif a.cmd == "docsis":
+        print(docsis.render(docsis.load(a.file)))
     elif a.cmd == "scan":
         data = scan.collect()
         if data.get("error"):

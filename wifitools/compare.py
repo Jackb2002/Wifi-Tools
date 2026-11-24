@@ -27,6 +27,9 @@ METRICS = [
     ("Upload loaded latency (ms)", "throughput.upload.loaded_median_ms", True),
     ("Upload bufferbloat (ms)", "throughput.upload.bufferbloat_ms", True),
     ("Upload RPM", "throughput.upload.rpm", False),
+    ("Cable T3 events in log", "docsis.summary.t3_log_events", True),
+    ("Cable uncorrectable errors", "docsis.summary.uncorrectable_total", True),
+    ("Cable upstream T3 counters", "docsis.summary.t3_counter_total", True),
 ]
 
 
